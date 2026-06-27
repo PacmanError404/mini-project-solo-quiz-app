@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinklePad - A Solo Quiz Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="navbar-container">
+        <div class="navbar-title">TinklePad</div>
+        <div class="navbar-option">
+            <ul class="navbar-button">
+                <li>Dashboard</li>
+                <li>Quiz</li>
+                <li>Results</li>
+                <li>Leaderboard</li>
+            </ul>
+        </div>
+        <div class="navbar-features">
+            <div class="features">
+                <ul class="navbar-info">
+                    <li>Home</li>
+                    <li>About Us</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <main>
+        <div id="dashboard">
+            <div class="dashboard-heading">TinklePad Dashboard</div>
+            <span class="dashboard-decorator"></span>
+            <div class="category">
+                <label class="label" for="category">Category</label>
+                <select name="category" id="category" class="select">
+                    <option value="Programming">Programming</option>
+                    <option value="DevOps">DevOps</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                </select>
+            </div>
+            <div class="difficulty">
+                <label class="label" for="difficulty">Difficulty</label>
+                <select name="difficulty" id="difficulty" class="select">
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HARD">Hard</option>
+                </select>
+            </div>
+            <div class="questions">
+                <label class="label" for="questions">Number of Questions</label>
+                <select name="questions" id="questions" class="select">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+            <div class="info-box">
+                <p>You will get 10 questions. <br/> Single And Multiple Choice</p>
+            </div>
+            <div class="start-quiz-button">
+                <button onclick="startQuiz()";>Start Quiz</button>
+            </div>
+        </div>
+    </main>
+    <main>
+                <div id="quiz-interface">
+            <div id="quiz-page">
+                <!-- <div class="quiz-board board">
+                <div class="question-info">
+                    <div class="question-params">
+                        <div id="question-number">Question 1 of 10</div>
+                        <div class="quiz-completion">30% completed</div>
+                    </div>
+                        <div id="question-timer">00:00</div>
+                </div>
+                <div class="quiz-progress"></div>
+                <div class="question-panel">
+                    <div id="question-slide">
+                        <div class="question" issolved="false">Which of the following are greenhouse gases?</div>
+                        <div class="question-type">Multiple Answer</div>
+                    </div>
+                    <div class="question-feature">Click on the checkbox</div>
+                    <div id="question-option">
+                        <label class="input" for="input">
+                            <input id="op-1" type="checkbox" value="1" ><p id="1"></p>
+                        </label>
+                        <label class="input" for="input">
+                            <input id="op-2" type="checkbox" value="2" ><p id="2"></p>
+                        </label>
+                        <label class="input" for="input">
+                            <input id="op-3" type="checkbox" value="3" ><p id="3"></p>
+                        </label>
+                        <label class="input" for="input">
+                            <input id="op-4" type="checkbox" value="4" ><p id="4"></p>
+                        </label>
+                    </div>
+                    <div id="question-browser">
+                        <button id="previous">Previous</button>
+                        <button id="submit">Submit</button>
+                        <button id="next">Next</button>
+                    </div> -->
+                </div>
+            </div>
+            </div>
+        <div class="info-board">
+            <div class="stats-board board">
+                <div class="quiz-stats">
+                    <div class="up">
+                        <div class="score block">
+                        <div class="box">Score</div>
+                        <div id="score-val" class="value">0</div>
+                    </div>
+                    <div class="count block">
+                        <div class="box">Count</div>
+                        <div id="count-val" class="value">10</div>
+                    </div>
+                    </div>
+                    <div class="down">
+                    <div class="correct block">
+                        <div class="box down">Correct</div>
+                        <div class="value">+4</div>
+                    </div>
+                    <div class="wrong block">
+                        <div class="box down">Wrong</div>
+                        <div class="value">0</div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="question-board board">
+            </div>
+             <div id="quiz-completion">teri maa ka completed</div>
+            <div class="submit-and-leave">
+                <button id="submit-and-leave">SUBMIT and LEAVE</button>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+    </script>
+</body>
+</html>
