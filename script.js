@@ -1,33 +1,14 @@
 let score = 0;
+let tot_score = 0;
 let solved = 0;
 let sumbit = document.getElementById("submit")
-
+let chosenAnswer = []
+let answerKey = []
 let timerID;
 let timeLeft = 60;
-
-const startTimer = (value)=>{
-  if(value=='EASY') {timeLeft=59}
-  if(value=='MEDIUM') {timeLeft=29}
-  if(value=='HARD') {timeLeft=15}
-
-    if (timeLeft > 0) {
-        timeLeft--;
-
-      timerID = setTimeout(startTimer, 1000);
-    } else {
-        alert("Time's up!");
-    }
-
-
-}
-
-
 const startQuiz = async ()=>{      
   let offset = 0;
-  let limit = 50;
-  console.log(difficulty.value)
-  console.log(questions.value)
-  console.log(category.value)      
+  let limit = 50;     
     const response = await fetch(
   `https://quizapi.io/api/v1/questions?offset=${offset}&limit=${limit}`,
   {
@@ -39,23 +20,20 @@ const startQuiz = async ()=>{
 );
 
 
+
 for(let i=0;i<questions.value;i++){
   document.getElementsByClassName("question-board")[0].innerHTML += `<div id="${i+1}" class="question-pallet" issolved="false">${i+1}</div>`
 }
 
 const response2 = await response.json();
 let data = response2.data;
-console.log("this is api from start")
 let result = data.filter((data)=>data.category===category.value)
-console.log(response2)
-console.log(result)
 
 document.getElementsByTagName('main')[0].style.display='none';
 document.getElementsByTagName('main')[1].style.display='flex';
-document.getElementById('quiz-interface').style.visibility='visible';
+document.getElementById('quiz-interface').style.display = 'block';
+document.getElementById('info-board').style.display = 'block';
 
-console.log(result)
-let percentage = (solved/questions.value)*100;
 const loadQuestion = ()=>{
 let quizPage = document.getElementById('quiz-page')
 result.map((result,id)=>
@@ -65,9 +43,7 @@ result.map((result,id)=>
                     <div class="question-params">
                         <div id="${id+1}">Question ${id+1} of ${questions.value}</div>
                     </div>
-                        <div id="question-timer">00:00</div>
                 </div>
-                <div class="quiz-progress"></div>
                 <div class="question-panel">
                     <div id="question-slide">
                         <div class="question" id="${result.id}">${result.text}</div>
@@ -75,11 +51,13 @@ result.map((result,id)=>
                     </div>
                     <div class="question-feature">Click on the checkbox</div>
                     <div id="question-option">
+                    
                     ${result.answers.map((answer)=>
                       `<label class="input" for="input" id="${id}">
-                      <input type="radio" id="${answer.id}" value="${answer.isCorrect}"/><p>${answer.text}</p>
-                      </label>`
+                      <input type="radio" name="answer" id="${answer.id}" value="${answer.isCorrect}" text="${answer.text}"/><p>${answer.text}</p>
+                       </label> `
                     ).join("")}
+                  
                     <div id="question-browser">
                         <button class="previous">Previous</button>
                         <button class="submit">Submit</button>
@@ -88,21 +66,44 @@ result.map((result,id)=>
 )
 
 }
+let j = 0;
+
+
+const startTimer = (value)=>{
+  if(value=='EASY') {timeLeft=59}
+  if(value=='MEDIUM') {timeLeft=29}
+  if(value=='HARD') {timeLeft=15}
+
+    if (timeLeft > 0) {
+      document.getElementById('question-timer').innerText = `00:${timeLeft}`
+      timeLeft--;
+      timerID = setTimeout(startTimer, 1000);
+    } else {
+        alert("Time's up! No option has been selected by the user");
+        document.getElementsByClassName('submit')[j].disabled = true;
+        solved = solved + 1;
+        document.getElementsByClassName('question-pallet')[j].classList.add('solved')
+    }
+
+
+}
+
 
 loadQuestion();
+startTimer(difficulty.value);
 
-
-let j = 0;
 document.getElementsByClassName('quiz-board')[j].classList.remove("hidden")
 
 let previous = document.querySelectorAll(".previous")
 previous.forEach(previous=>{
   previous.addEventListener('click',()=>{
-  console.log('previous');
   if(j){
+  clearTimeout(timerID)
+  document.getElementById('question-timer').innerText = `00:00`
   document.getElementsByClassName('quiz-board')[j].classList.add("hidden")
   j--;
   document.getElementsByClassName('quiz-board')[j].classList.remove("hidden")
+  startTimer(difficulty.value)
   }
 })
 })
@@ -111,13 +112,16 @@ let next = document.querySelectorAll(".next")
 next.forEach(next=>{
   next.addEventListener('click',()=>{
   if(j<questions.value-1){
-  console.log('next');
-  startTimer(difficulty.value);
-  console.log("timer starts")
+  clearTimeout(timerID)
+  if(solved<=j){
+    alert('Choose and submit atleast one option to continue!')
+  }else{
   document.getElementsByClassName('quiz-board')[j].classList.add("hidden")
   j++;
   document.getElementsByClassName('quiz-board')[j].classList.remove("hidden")
+  startTimer(difficulty.value)
   }
+}
 })
 })
 
@@ -125,10 +129,11 @@ let submit = document.querySelectorAll(".submit")
 
 submit.forEach(submit=>{
   submit.addEventListener("click",()=>{
+  clearTimeout(timerID)
   const checkboxes = document.querySelectorAll('#question-option input[type="radio"]');
   let selectedAnswers = [];
 
-  checkboxes.forEach((checkbox)=>{
+  checkboxes.forEach((checkbox,id)=>{
     if(checkbox.checked){
       selectedAnswers.push(checkbox.value)
     }
@@ -136,47 +141,77 @@ submit.forEach(submit=>{
     });
 
   document.getElementsByClassName('question-pallet')[j].classList.add('solved')
-
-  console.log(selectedAnswers)
-  score = 4*selectedAnswers.filter((answer)=>answer=='true').length
-  console.log('score is', score)
+  if(selectedAnswers[0]=='true'){
+    score += 4;
+    answerKey.push('Correct')
+  }else{
+    score += 0;
+    answerKey.push('Wrong')
+  }
   solved = solved + 1;
   document.getElementById('score-val').innerText = `${score}`
-  console.log(solved)
   document.getElementById('quiz-completion').innerText = `${(solved/questions.value)*100}% completed`
-  
-
-  window.addEventListener("DOMContentLoaded",()=>{
-  console.log('solved num of questions is- ')
-})
-
-
+  document.getElementById('completion-progress').style.width = `${(solved/questions.value)*100}%`
+  tot_score = 4*questions.value;
 })
 })
+  const loadResultBoard = ()=>{
+    let result_dashboard = document.getElementById('result-dashboard')
+    result.map((answer,id)=>{
+      if(id<questions.value)
+      {
+        result_dashboard.innerHTML += ` <div class="question-result" id="question-${id+1}">
+            <div class="question-title">Question: ${answer.text}</div>
+            <div class="correct-option">Correct Key: ${(answer.answers[0].text)} </div>
+            <div class="chosen-verdict">No Option Chosen</div>
+            <div class="explanation">Explanation:${answer.explanation}</div>
+        </div>`
+      }
+    })
+
+  }
 
 
+  loadResultBoard();
+  document.getElementById('submit-and-leave').addEventListener('click',()=>{
+    if(solved<questions.value){
+      alert("YOU MUST SOLVE ALL THE QUESTIONS FIRST");
+    }else{
+      clearTimeout(timerID);
+      onEnd();
+    }
+  })
 
-// document.getElementById("count-val").innerText = `${questions.value}`
-// document.getElementById("category-val").innerText = `${category.value}`
-// let resultslide = document.getElementById("result-slide")
-// document.getElementById('submit-and-leave').addEventListener('click',()=>{
-//   window.location.href = "result.html"
-//     console.log('outside')
-//     for(let i=0;i<10;i++){
-//     console.log('hello')
-//     resultslide.innerHTML += `<div class="question-result">
-//                 <div class="question-title">Question Name</div>
-//                 <div class="final-result">Correct</div>
-//                 <div class="explanation">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem, veritatis.</div> 
-//                         </div>`
+const messages = (score)=>{
+  if(score<=20){
+    return "Try Again!"
+  }
+  if(score>20 && score<=50){
+    return "Do Better Next Time!"
+  }
+  if(score>50 && score<=80){
+    return "Nice Work!"
+  }
+  if(score>80 && score<=100){
+    return "Excellent!"
+  }
+}
 
-// }
-// })
-
-
-
-
+const onEnd = ()=>{
+  document.getElementById('quiz-interface').style.display='none';
+  document.getElementById('info-board').style.display='none';
+  document.getElementById('result-dashboard').style.display = 'block';
+  document.getElementById('final-score').innerHTML = `<p>SCORE: ${(score/tot_score)*100}%</p>`
+  document.getElementById('celebration-message').innerHTML = `<p>${messages((score/tot_score)*100)}</p>` 
+  answerKey.map((answer,id)=>{
+    document.getElementsByClassName('chosen-verdict')[id].innerText = `${answerKey[id]}`
+    if(answerKey[id]=='Correct'){
+      document.getElementsByClassName('question-result')[id].classList.add('correct')
+    }else{
+      document.getElementsByClassName('question-result')[id].classList.add('wrong')
+    }
+    })
 }
 
 
-
+}
