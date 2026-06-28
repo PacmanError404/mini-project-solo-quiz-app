@@ -51,13 +51,14 @@
             <div class="questions">
                 <label class="label" for="questions">Number of Questions</label>
                 <select name="questions" id="questions" class="select" onchange="numberOfQuestions()"">
+                    <option value="3">3</option>
                     <option value="5">5</option>
+                    <option value="8">8</option>
                     <option value="10">10</option>
-                    <option value="15">15</option>
                 </select>
             </div>
             <div class="info-box">
-                <p>You will get 5 questions. <br/> Single And Multiple Choice</p>
+                <p>You will get 3 questions. <br/> Single And Multiple Choice</p>
             </div>
             <div class="start-quiz-button">
                 <button onclick="startQuiz()"; onclick="showPanel();">Start Quiz</button>
@@ -82,7 +83,7 @@
                     </div>
                     <div class="count block">
                         <div class="box">Count</div>
-                        <div id="count-val" class="value">10</div>
+                        <div id="count-val" class="value">0</div>
                     </div>
                     </div>
                     <div class="down">

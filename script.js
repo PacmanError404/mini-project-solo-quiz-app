@@ -88,7 +88,7 @@ const startTimer = (value)=>{
 
 }
 
-
+document.getElementById('count-val').innerText = `${questions.value}`
 loadQuestion();
 startTimer(difficulty.value);
 
@@ -150,8 +150,8 @@ submit.forEach(submit=>{
   }
   solved = solved + 1;
   document.getElementById('score-val').innerText = `${score}`
-  document.getElementById('quiz-completion').innerText = `${(solved/questions.value)*100}% completed`
-  document.getElementById('completion-progress').style.width = `${(solved/questions.value)*100}%`
+  document.getElementById('quiz-completion').innerText = `${Math.round((solved/questions.value)*100)}% completed`
+  document.getElementById('completion-progress').style.width = `${Math.round((solved/questions.value)*100)}%`
   tot_score = 4*questions.value;
 })
 })
